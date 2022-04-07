@@ -3,7 +3,7 @@
 
 /* variables  */
 :root {
-  --main-color: #a05f91;
+  --main-color: #2d4263;
   --secondary-color: #333;
   --accent-color: #fff;
 
@@ -64,4 +64,9 @@ section {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.title {
+  padding: 0.7rem 1rem;
+  background-color: #f8f8f8;
+  border-radius: 10px;
 }

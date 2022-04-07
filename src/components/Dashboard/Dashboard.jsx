@@ -1,15 +1,14 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-
+import Asidebar from "./Asidebar/Asidebar";
 const Dashboard = () => {
   return (
     <DashboardContainer>
       <div className="dashboard-container">
-        <aside>
-          <h1>Sidebar</h1>
-        </aside>
+        <Asidebar />
         <div className="dashboard-content">
-          <h1>Content will goes here</h1>
+          <Outlet />
         </div>
       </div>
     </DashboardContainer>
@@ -27,7 +26,12 @@ const DashboardContainer = styled.section`
       height: 100%;
       background-color: var(--main-color);
       z-index: 3;
-      padding: 1rem;
+    }
+    .dashboard-content {
+      position: relative;
+      width: calc(100% - 350px);
+      left: 300px;
+      margin-left: 1rem;
     }
   }
 `;
