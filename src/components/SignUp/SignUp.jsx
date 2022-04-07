@@ -108,17 +108,22 @@ const SignUpContainer = styled.section`
         gap: 0.5rem;
         margin-top: 0.3rem;
         button {
-          border: 1px solid #4c69a1;
-          color: #4c69a1;
+          border: 1px solid var(--main-color);
+          color: var(--main-color);
           background: transparent;
           width: 40px;
           height: 40px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 1.3rem;
-          border-radius: 2px;
           cursor: pointer;
+          transition: all 0.4s ease;
+          &:hover {
+            background-color: var(--main-color);
+            color: var(--accent-color);
+          }
         }
       }
     }
@@ -148,6 +153,10 @@ const SignUpContainer = styled.section`
       flex-direction: column;
       gap: 0.4rem;
       margin-top: 0.5rem;
+      a {
+        font-weight: bold;
+        color: var(--main-color);
+      }
       span {
         cursor: pointer;
         font-weight: bold;

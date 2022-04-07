@@ -3,7 +3,7 @@
 
 /* variables  */
 :root {
-  --main-color: #5584ac;
+  --main-color: #a05f91;
   --secondary-color: #333;
   --accent-color: #fff;
 
@@ -61,4 +61,7 @@ section {
 }
 .btn:active {
   transform: translateY(5px);
+}
+.cursor-pointer {
+  cursor: pointer;
 }

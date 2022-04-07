@@ -1,8 +1,9 @@
 import React from "react";
 import { FaGripfire } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <HeaderContainer>
       <div className="container">
@@ -17,12 +18,12 @@ const Header = () => {
                 <NavLink to="/home">Home</NavLink>
               </li>
               <li>
-                <a href="#shop">Shop</a>
+                <NavLink to="/articles">Articles</NavLink>
               </li>
               <li>
-                <NavLink to="/login" className="btn">
+                <button onClick={() => navigate("/login")} className="btn">
                   Login
-                </NavLink>
+                </button>
               </li>
             </ul>
           </menu>
@@ -51,9 +52,14 @@ const NavBar = styled.nav`
     display: flex;
     align-items: center;
     position: relative;
-    gap: 1rem;
+    gap: 2rem;
     a:not(.btn) {
       color: var(--secondary-color);
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    a.active {
+      color: var(--main-color);
     }
   }
 `;
