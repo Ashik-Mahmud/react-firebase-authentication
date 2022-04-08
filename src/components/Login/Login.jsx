@@ -2,17 +2,22 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import KeepMeSignIn from "../../utilities/keepMeSignIn";
-import Redirect from "../../utilities/Redirect";
+import { AuthContext } from "../../App";
+import { KeepMeSignIn } from "../../utilities/keepMeSignIn";
+import RedirectPage from "../../utilities/RedirectPage";
 import { auth } from "../Firebase/Firebase.config";
 import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const Login = () => {
-  Redirect();
   const navigate = useNavigate();
+  RedirectPage();
+
+  /* context value */
+  const { setIsAuth, setUsers } = useContext(AuthContext);
+
   const [reset, setReset] = useState(false);
   /* for Login */
   const [email, setEmail] = useState("");
@@ -33,7 +38,8 @@ const Login = () => {
         setEmail("");
         setPassword("");
         navigate("/dashboard/overview");
-        KeepMeSignIn(response.user);
+        KeepMeSignIn(response.user, setUsers);
+        setIsAuth(true);
       })
       .catch((error) => {
         toast.error(error.message.split(":")[1]);
@@ -91,7 +97,7 @@ const Login = () => {
                 {!reset ? "Login into Account" : "Reset Password"}
               </button>
             </div>
-            {!reset && <ThirdParty />}
+            {!reset && <ThirdParty setUsers={setUsers} setIsAuth={setIsAuth} />}
 
             <div className="actions">
               <p>

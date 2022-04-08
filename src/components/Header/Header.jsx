@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaGripfire } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { AuthContext } from "../../App";
 const Header = () => {
+  const { isAuth } = useContext(AuthContext);
+
   const navigate = useNavigate();
   return (
     <HeaderContainer>
@@ -21,9 +24,18 @@ const Header = () => {
                 <NavLink to="/articles">Articles</NavLink>
               </li>
               <li>
-                <button onClick={() => navigate("/login")} className="btn">
-                  Login
-                </button>
+                {isAuth ? (
+                  <button
+                    onClick={() => navigate("/dashboard/overview")}
+                    className="btn"
+                  >
+                    Dashboard
+                  </button>
+                ) : (
+                  <button onClick={() => navigate("/login")} className="btn">
+                    Login
+                  </button>
+                )}
               </li>
             </ul>
           </menu>

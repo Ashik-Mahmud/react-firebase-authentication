@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";
 import { BsCardChecklist, BsChevronDoubleLeft } from "react-icons/bs";
 import { FaGripfire } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { AuthContext } from "../../../App";
 const Asidebar = () => {
   const navigate = useNavigate();
+  const { users, setIsAuth } = useContext(AuthContext);
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem("uid");
+    localStorage.removeItem("isAuth");
+    navigate("/login");
+    setIsAuth(false);
+  };
+
   return (
     <AsideContainer>
       <div className="aside-header">
@@ -14,7 +24,7 @@ const Asidebar = () => {
           <BsChevronDoubleLeft />
           <span>Back</span>
         </div>
-        <span>
+        <span onClick={handleLogOut}>
           LogOut <AiOutlineLogout />
         </span>
       </div>
@@ -46,14 +56,17 @@ const Asidebar = () => {
       </menu>
       <Profile>
         <div className="img">
-          <img
-            src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
-            alt=""
-          />
+          <img src={users?.photoURL} alt={users?.displayName} />
         </div>
         <div className="details">
-          <h3>Ashik Mahmud</h3>
-          <small>ashik@gmail.com</small>
+          <h3>{users?.displayName}</h3>
+          <small title={users?.email}>
+            {users?.email !== "null"
+              ? users?.email?.length > 20
+                ? users?.email?.slice(0, 20) + "..."
+                : users?.email
+              : "not available"}
+          </small>
         </div>
       </Profile>
     </AsideContainer>

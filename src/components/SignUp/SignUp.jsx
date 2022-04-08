@@ -7,11 +7,11 @@ import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import Redirect from "../../utilities/Redirect";
+import RedirectPage from "../../utilities/RedirectPage";
 import { auth } from "../Firebase/Firebase.config";
 import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const SignUp = () => {
-  Redirect();
+  RedirectPage();
 
   /* for sign up */
   const [name, setName] = useState("");

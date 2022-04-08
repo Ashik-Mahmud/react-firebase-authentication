@@ -12,20 +12,20 @@ import {
 } from "react-icons/ai";
 import { thirdPartySignIn } from "../../utilities/saveUserInfo";
 import { auth } from "../Firebase/Firebase.config";
-const ThirdParty = () => {
+const ThirdParty = ({ setUsers, setIsAuth }) => {
   const handleGoogleSignIn = () => {
     const provider = new GoogleAuthProvider();
-    thirdPartySignIn(auth, provider);
+    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
   };
 
   const handleGithubSignIn = () => {
     const provider = new GithubAuthProvider();
-    thirdPartySignIn(auth, provider);
+    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
   };
 
   const handleFacebookSignIn = () => {
     const provider = new FacebookAuthProvider();
-    thirdPartySignIn(auth, provider);
+    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
   };
   const handleTwitterSignIn = () => {
     console.log("object");

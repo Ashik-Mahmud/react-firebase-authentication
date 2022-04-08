@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { AuthContext } from "../../../App";
 
 const Overview = () => {
+  const { users } = useContext(AuthContext);
+
   return (
     <OverviewContainer>
       <div className="title">
@@ -10,7 +13,8 @@ const Overview = () => {
       </div>
       <div className="overview-container">
         <h1>
-          Welcome to dashboard <span className="colorize">Ashik Mahmud</span>
+          Welcome to dashboard{" "}
+          <span className="colorize">{users?.displayName}</span>
         </h1>
       </div>
     </OverviewContainer>

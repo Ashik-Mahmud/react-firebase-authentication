@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const HasLoggedIn = () =>{
-    const [loggedIn, setLoggedIn] = useState(null);
+    const [loggedIn, setLoggedIn] = useState(false);
     
   useEffect(()=>{
       const isLoggedIn = sessionStorage.getItem("uid");

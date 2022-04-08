@@ -1,3 +1,4 @@
+import { createContext, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
@@ -11,11 +12,18 @@ import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
 import SignUp from './components/SignUp/SignUp';
-
+import useStorage from './hooks/useStorage';
+export const AuthContext = createContext(null)
 function App() {
   const location = useLocation();
+  const  [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+
+  /* get user */
+  const {users, setUsers}= useStorage();
+  
   return (
     <>
+    <AuthContext.Provider value={{setIsAuth, isAuth, users ,setUsers}}>
     {!location.pathname.includes('dashboard') && <Header /> }
      <Toaster position="top-center" reverseOrder={false} />
      <Routes>
@@ -31,7 +39,7 @@ function App() {
          <Route path='/sign-up' element={<SignUp />}/>
          <Route path='*' element={<NotFound />} />
      </Routes>
-     
+     </AuthContext.Provider>
     </>
   );
 }

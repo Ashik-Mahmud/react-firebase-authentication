@@ -1,10 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import Redirect from "../../utilities/Redirect";
+import RedirectPage from "./../../utilities/RedirectPage";
 import Asidebar from "./Asidebar/Asidebar";
 const Dashboard = () => {
-  Redirect();
+  RedirectPage("dashboard");
+
   return (
     <DashboardContainer>
       <div className="dashboard-container">
