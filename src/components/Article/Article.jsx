@@ -1,10 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../Firebase/Firebase.config";
 
 const Article = () => {
   const loggedInUser = auth.currentUser;
-
+  const navigate = useNavigate();
   return (
     <ArticleContainer>
       <div className="image">
@@ -28,7 +29,13 @@ const Article = () => {
           <p>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et illum
             consequuntur deserunt ut iusto voluptates provident excepturi ipsam
-            est at. <span className="cursor-pointer colorize">read more</span>
+            est at.{" "}
+            <span
+              onClick={() => navigate(`/ArticleDetails/1`)}
+              className="cursor-pointer colorize"
+            >
+              read more
+            </span>
           </p>
         </div>
       </div>

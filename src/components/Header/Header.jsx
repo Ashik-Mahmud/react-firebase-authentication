@@ -25,7 +25,7 @@ const Header = () => {
         <NavBar>
           <div className="logo colorize">
             <FaGripfire />
-            Auth {user?.displayName}
+            Auth
           </div>
           <menu>
             <ul>

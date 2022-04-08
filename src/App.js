@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
+import ArticleDetails from './components/ArticleDetails/ArticleDetails';
 import Articles from './components/Articles/Articles';
 import { CreatePost } from './components/Dashboard/CreatePost/CreatePost';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -17,19 +18,19 @@ export const AuthContext = createContext(null)
 function App() {
   const location = useLocation();
   const {isAuth, user} = useFirebase();
-
-  /* get user */
-
+  
+  
   
   return (
     <>
     <AuthContext.Provider value={{isAuth, user}}>
-    {!location.pathname.includes('dashboard') && <Header /> }
+    {!location.pathname.includes('dashboard') && !location.pathname.includes('ArticleDetails') && <Header /> }
      <Toaster position="top-center" reverseOrder={false} />
      <Routes>
          <Route path='/' element={<Home />} />
          <Route path='/home' element={<Home />} />
          <Route path='/articles' element={<Articles />} />
+         <Route path='/articleDetails/:ArticleId' element={<ArticleDetails />} />
          {isAuth &&  <Route path='/dashboard' element={<Dashboard />} >
              <Route index="1" path='overview' element={<Overview />} />
              <Route path='create-post' element={<CreatePost />} />
