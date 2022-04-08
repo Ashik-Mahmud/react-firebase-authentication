@@ -70,3 +70,6 @@ section {
   background-color: #f8f8f8;
   border-radius: 10px;
 }
+.color-danger {
+  color: salmon;
+}

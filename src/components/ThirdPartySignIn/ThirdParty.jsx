@@ -10,23 +10,26 @@ import {
   AiFillGoogleCircle,
   AiFillTwitterCircle,
 } from "react-icons/ai";
-import { thirdPartySignIn } from "../../utilities/saveUserInfo";
+import useFirebase from "../../hooks/useFirebase";
 import { auth } from "../Firebase/Firebase.config";
-const ThirdParty = ({ setUsers, setIsAuth }) => {
+const ThirdParty = () => {
+  const { thirdPartySignIn } = useFirebase();
+  /* handle google sign in */
   const handleGoogleSignIn = () => {
     const provider = new GoogleAuthProvider();
-    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
+    thirdPartySignIn(auth, provider);
   };
-
+  /* handle github sign in */
   const handleGithubSignIn = () => {
     const provider = new GithubAuthProvider();
-    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
+    thirdPartySignIn(auth, provider);
   };
-
+  /* handle facebook sign in */
   const handleFacebookSignIn = () => {
     const provider = new FacebookAuthProvider();
-    thirdPartySignIn(auth, provider, setUsers, setIsAuth);
+    thirdPartySignIn(auth, provider);
   };
+  /* handle twitter signIn */
   const handleTwitterSignIn = () => {
     console.log("object");
   };

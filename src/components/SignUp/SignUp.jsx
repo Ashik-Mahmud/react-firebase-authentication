@@ -3,25 +3,29 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import React, { useContext, useRef, useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { v4 } from "uuid";
 import { AuthContext } from "../../App";
-import RedirectPage from "../../utilities/RedirectPage";
-import { auth } from "../Firebase/Firebase.config";
+import { auth, storage } from "../Firebase/Firebase.config";
 import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const SignUp = () => {
-  RedirectPage();
-
   /* get value from context api */
-  const { setIsAuth, setUsers } = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    isAuth && navigate("/dashboard/overview");
+  }, [isAuth, navigate]);
 
   /* for sign up */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [avatar, setAvatar] = useState(null);
 
   /*  form ref */
   const formRef = useRef(null);
@@ -38,14 +42,23 @@ const SignUp = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        /*update user profile*/
-        updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL:
-            "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
-        }).then(() => {
-          toast.success("User profile updated");
+        const imageRef = ref(storage, `/images/${avatar.name + v4()}`);
+        uploadBytes(imageRef, avatar).then((response) => {
+          toast.success("uploaded image");
+          getDownloadURL(response.ref).then((url) => {
+            /*update user profile*/
+            updateProfile(auth.currentUser, {
+              displayName: name,
+              photoURL: url
+                ? url
+                : "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
+            }).then(() => {
+              toast.success("User profile updated");
+              navigate("/dashboard/overview");
+            });
+          });
         });
+
         toast.success("User created successfully.");
         /*sent verification email */
         sendEmailVerification(auth.currentUser).then(() => {
@@ -54,10 +67,8 @@ const SignUp = () => {
 
         /* reset form  */
         formRef.current.reset();
-        console.log(userCredential.user);
       })
       .catch((err) => {
-        console.error(err);
         toast.error(err.message.split(":")[1]);
       });
   };
@@ -103,11 +114,17 @@ const SignUp = () => {
                 placeholder="Confirm Password"
               />
             </div>
-
+            <div className="input-group">
+              <label htmlFor="file">Select Avatar</label>
+              <input
+                onChange={(event) => setAvatar(event.target.files[0])}
+                type="file"
+              />
+            </div>
             <div className="input-group">
               <button className="btn">Sign Up into Account</button>
             </div>
-            <ThirdParty setIsAuth={setIsAuth} setUsers={setUsers} />
+            <ThirdParty />
             <div className="actions">
               <p>
                 Already have Account? <NavLink to="/login">Login</NavLink>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { AuthContext } from "../../../App";
 
 const Overview = () => {
-  const { users } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <OverviewContainer>
@@ -14,7 +14,7 @@ const Overview = () => {
       <div className="overview-container">
         <h1>
           Welcome to dashboard{" "}
-          <span className="colorize">{users?.displayName}</span>
+          <span className="colorize">{user?.displayName}</span>
         </h1>
       </div>
     </OverviewContainer>

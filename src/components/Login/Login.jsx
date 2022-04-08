@@ -2,21 +2,21 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../App";
-import { KeepMeSignIn } from "../../utilities/keepMeSignIn";
-import RedirectPage from "../../utilities/RedirectPage";
 import { auth } from "../Firebase/Firebase.config";
 import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const Login = () => {
   const navigate = useNavigate();
-  RedirectPage();
 
   /* context value */
-  const { setIsAuth, setUsers } = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
+  useEffect(() => {
+    isAuth && navigate("/dashboard/overview");
+  }, [isAuth, navigate]);
 
   const [reset, setReset] = useState(false);
   /* for Login */
@@ -33,20 +33,18 @@ const Login = () => {
     /* sign in using email password */
     signInWithEmailAndPassword(auth, email, password)
       .then((response) => {
-        console.log(response.user);
         formRef.current.reset();
         setEmail("");
         setPassword("");
         navigate("/dashboard/overview");
-        KeepMeSignIn(response.user, setUsers);
-        setIsAuth(true);
+        toast.success("Successfully loggedIn");
       })
       .catch((error) => {
         toast.error(error.message.split(":")[1]);
       });
+
     /* reset password */
     if (reset) {
-      console.log(email);
       sendPasswordResetEmail(auth, email)
         .then(() => {
           toast.success(`We email you with password reset link to ${email}`);
@@ -91,24 +89,26 @@ const Login = () => {
                 />
               </div>
             )}
+            <div className="actions">
+              <p>
+                {reset ? "Go to Login" : "Forgot password?"}
+                <span
+                  className="colorize cursor-pointer"
+                  onClick={() => setReset((prev) => !prev)}
+                >
+                  {reset ? " Page" : " Reset"}
+                </span>
+              </p>
+            </div>
 
             <div className="input-group">
               <button className="btn">
                 {!reset ? "Login into Account" : "Reset Password"}
               </button>
             </div>
-            {!reset && <ThirdParty setUsers={setUsers} setIsAuth={setIsAuth} />}
+            {!reset && <ThirdParty />}
 
             <div className="actions">
-              <p>
-                {reset ? "Go to Login" : "Forgot password?"}
-                <span
-                  className="colorize"
-                  onClick={() => setReset((prev) => !prev)}
-                >
-                  {reset ? " Page" : " Reset"}
-                </span>
-              </p>
               <p>
                 Not even Account? <NavLink to="/sign-up">Create</NavLink>
               </p>

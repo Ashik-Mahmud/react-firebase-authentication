@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
@@ -12,18 +12,18 @@ import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
 import SignUp from './components/SignUp/SignUp';
-import useStorage from './hooks/useStorage';
+import useFirebase from './hooks/useFirebase';
 export const AuthContext = createContext(null)
 function App() {
   const location = useLocation();
-  const  [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+  const {isAuth, user} = useFirebase();
 
   /* get user */
-  const {users, setUsers}= useStorage();
+
   
   return (
     <>
-    <AuthContext.Provider value={{setIsAuth, isAuth, users ,setUsers}}>
+    <AuthContext.Provider value={{isAuth, user}}>
     {!location.pathname.includes('dashboard') && <Header /> }
      <Toaster position="top-center" reverseOrder={false} />
      <Routes>

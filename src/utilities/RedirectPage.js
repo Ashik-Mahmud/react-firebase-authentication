@@ -1,18 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-const RedirectPage = (slug) =>{
+const RedirectPage = (isAuth) =>{
     const navigate = useNavigate();
-    const uid = sessionStorage.getItem("uid");
-
+   
   useEffect(() => {
-    if (uid === null) {
-        if(slug === 'dashboard'){
-            navigate("/login");
-        }
+    if (!isAuth) {
+        navigate("/login");   
     } else {
       navigate("/dashboard/overview");
     }
-  }, [uid, slug, navigate]);
+  }, [isAuth, navigate]);
    
 }
 export default RedirectPage;

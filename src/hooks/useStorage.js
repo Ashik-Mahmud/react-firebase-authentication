@@ -9,7 +9,7 @@ const useStorage = () =>{
         const loggedInUserUid = sessionStorage.getItem("uid");
         const getUser = userItems.find(user => user.uid === loggedInUserUid);
         setUsers(getUser)
-        console.log(userItems, loggedInUserUid);
+        
     }, [])
     
     return {users, setUsers}; 

@@ -1,4 +1,6 @@
+import { signOut } from "firebase/auth";
 import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineDashboard, AiOutlineLogout } from "react-icons/ai";
 import { BsCardChecklist, BsChevronDoubleLeft } from "react-icons/bs";
 import { FaGripfire } from "react-icons/fa";
@@ -6,15 +8,16 @@ import { FiEdit } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../../App";
+import { auth } from "../../Firebase/Firebase.config";
 const Asidebar = () => {
   const navigate = useNavigate();
-  const { users, setIsAuth } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const handleLogOut = () => {
-    sessionStorage.removeItem("uid");
-    localStorage.removeItem("isAuth");
-    navigate("/login");
-    setIsAuth(false);
+    signOut(auth).then(() => {
+      toast.success("Log Out successfully!");
+      navigate("/login");
+    });
   };
 
   return (
@@ -56,15 +59,15 @@ const Asidebar = () => {
       </menu>
       <Profile>
         <div className="img">
-          <img src={users?.photoURL} alt={users?.displayName} />
+          <img src={user?.photoURL} alt={user?.displayName} />
         </div>
         <div className="details">
-          <h3>{users?.displayName}</h3>
-          <small title={users?.email}>
-            {users?.email !== "null"
-              ? users?.email?.length > 20
-                ? users?.email?.slice(0, 20) + "..."
-                : users?.email
+          <h3>{user?.displayName}</h3>
+          <small title={user?.email}>
+            {user?.email
+              ? user?.email?.length > 20
+                ? user?.email?.slice(0, 20) + "..."
+                : user?.email
               : "not available"}
           </small>
         </div>
@@ -147,6 +150,7 @@ const Profile = styled.div`
     img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
   .details {
