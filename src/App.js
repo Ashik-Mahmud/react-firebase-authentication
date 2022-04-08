@@ -30,11 +30,12 @@ function App() {
          <Route path='/' element={<Home />} />
          <Route path='/home' element={<Home />} />
          <Route path='/articles' element={<Articles />} />
-         <Route path='/dashboard' element={<Dashboard />} >
+         {isAuth &&  <Route path='/dashboard' element={<Dashboard />} >
              <Route index="1" path='overview' element={<Overview />} />
              <Route path='create-post' element={<CreatePost />} />
              <Route path='post-lists' element={<PostList />} />
-         </Route>
+         </Route>}
+        
          <Route path='/login' element={<Login />} />
          <Route path='/sign-up' element={<SignUp />}/>
          <Route path='*' element={<NotFound />} />

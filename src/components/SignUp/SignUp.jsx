@@ -3,15 +3,19 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { AuthContext } from "../../App";
 import RedirectPage from "../../utilities/RedirectPage";
 import { auth } from "../Firebase/Firebase.config";
 import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const SignUp = () => {
   RedirectPage();
+
+  /* get value from context api */
+  const { setIsAuth, setUsers } = useContext(AuthContext);
 
   /* for sign up */
   const [name, setName] = useState("");
@@ -103,7 +107,7 @@ const SignUp = () => {
             <div className="input-group">
               <button className="btn">Sign Up into Account</button>
             </div>
-            <ThirdParty />
+            <ThirdParty setIsAuth={setIsAuth} setUsers={setUsers} />
             <div className="actions">
               <p>
                 Already have Account? <NavLink to="/login">Login</NavLink>
