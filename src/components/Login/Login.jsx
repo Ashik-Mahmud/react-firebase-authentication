@@ -1,13 +1,55 @@
-import React, { useState } from "react";
 import {
-  AiFillFacebook,
-  AiFillGithub,
-  AiFillGoogleCircle,
-} from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import KeepMeSignIn from "../../utilities/keepMeSignIn";
+import Redirect from "../../utilities/Redirect";
+import { auth } from "../Firebase/Firebase.config";
+import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const Login = () => {
+  Redirect();
+  const navigate = useNavigate();
   const [reset, setReset] = useState(false);
+  /* for Login */
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  /* form ref */
+  const formRef = useRef(null);
+  const handleSignInUser = (event) => {
+    event.preventDefault();
+    if (!email) return toast.error("Email field is required.");
+    if (!password && !reset) return toast.error("Password field is required.");
+
+    /* sign in using email password */
+    signInWithEmailAndPassword(auth, email, password)
+      .then((response) => {
+        console.log(response.user);
+        formRef.current.reset();
+        setEmail("");
+        setPassword("");
+        navigate("/dashboard/overview");
+        KeepMeSignIn(response.user);
+      })
+      .catch((error) => {
+        toast.error(error.message.split(":")[1]);
+      });
+    /* reset password */
+    if (reset) {
+      console.log(email);
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          toast.success(`We email you with password reset link to ${email}`);
+        })
+        .catch(() => {
+          toast.error("Something went wrong.");
+        });
+    }
+  };
 
   return (
     <LoginContainer>
@@ -24,15 +66,23 @@ const Login = () => {
               </>
             )}
           </h1>
-          <form action="#">
+          <form action="#" onSubmit={handleSignInUser} ref={formRef}>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <input type="email" placeholder="Email" />
+              <input
+                type="email"
+                onBlur={(event) => setEmail(event.target.value)}
+                placeholder="Email"
+              />
             </div>
             {!reset && (
               <div className="input-group">
                 <label htmlFor="password">Password</label>
-                <input type="password" placeholder="Password" />
+                <input
+                  type="password"
+                  onBlur={(event) => setPassword(event.target.value)}
+                  placeholder="Password"
+                />
               </div>
             )}
 
@@ -41,22 +91,7 @@ const Login = () => {
                 {!reset ? "Login into Account" : "Reset Password"}
               </button>
             </div>
-            {!reset && (
-              <div className="others-login">
-                <div className="or">or</div>
-                <div className="btn-groups">
-                  <button title="Google Sign In">
-                    <AiFillGoogleCircle />
-                  </button>
-                  <button title="Github Sign In">
-                    <AiFillGithub />
-                  </button>
-                  <button title="Facebook Sign In">
-                    <AiFillFacebook />
-                  </button>
-                </div>
-              </div>
-            )}
+            {!reset && <ThirdParty />}
 
             <div className="actions">
               <p>

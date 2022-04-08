@@ -9,6 +9,7 @@ import PostList from './components/Dashboard/PostList/PostList';
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
+import NotFound from './components/NotFound/NotFound';
 import SignUp from './components/SignUp/SignUp';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
          </Route>
          <Route path='/login' element={<Login />} />
          <Route path='/sign-up' element={<SignUp />}/>
+         <Route path='*' element={<NotFound />} />
      </Routes>
      
     </>

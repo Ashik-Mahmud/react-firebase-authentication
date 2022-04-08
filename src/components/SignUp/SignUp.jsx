@@ -1,23 +1,18 @@
 import {
   createUserWithEmailAndPassword,
-  FacebookAuthProvider,
-  GithubAuthProvider,
-  GoogleAuthProvider,
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  AiFillFacebook,
-  AiFillGithub,
-  AiFillGoogleCircle,
-} from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { thirdPartySignIn } from "../../utilities/saveUserInfo";
+import Redirect from "../../utilities/Redirect";
 import { auth } from "../Firebase/Firebase.config";
+import ThirdParty from "../ThirdPartySignIn/ThirdParty";
 const SignUp = () => {
+  Redirect();
+
   /* for sign up */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,32 +49,13 @@ const SignUp = () => {
         });
 
         /* reset form  */
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        formRef.reset();
+        formRef.current.reset();
         console.log(userCredential.user);
       })
       .catch((err) => {
         console.error(err);
         toast.error(err.message.split(":")[1]);
       });
-  };
-
-  const handleGoogleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    thirdPartySignIn(auth, provider);
-  };
-
-  const handleGithubSignIn = () => {
-    const provider = new GithubAuthProvider();
-    thirdPartySignIn(auth, provider);
-  };
-
-  const handleFacebookSignIn = () => {
-    const provider = new FacebookAuthProvider();
-    thirdPartySignIn(auth, provider);
   };
 
   return (
@@ -127,34 +103,7 @@ const SignUp = () => {
             <div className="input-group">
               <button className="btn">Sign Up into Account</button>
             </div>
-
-            <div className="others-login">
-              <div className="or">or</div>
-              <div className="btn-groups">
-                <button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  title="Google Sign In"
-                >
-                  <AiFillGoogleCircle />
-                </button>
-                <button
-                  onClick={handleGithubSignIn}
-                  type="button"
-                  title="Github Sign In"
-                >
-                  <AiFillGithub />
-                </button>
-                <button
-                  onClick={handleFacebookSignIn}
-                  type="button"
-                  title="Facebook Sign In"
-                >
-                  <AiFillFacebook />
-                </button>
-              </div>
-            </div>
-
+            <ThirdParty />
             <div className="actions">
               <p>
                 Already have Account? <NavLink to="/login">Login</NavLink>
