@@ -1,4 +1,13 @@
-import React from "react";
+import {
+  createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
+import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import {
   AiFillFacebook,
   AiFillGithub,
@@ -6,7 +15,73 @@ import {
 } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { thirdPartySignIn } from "../../utilities/saveUserInfo";
+import { auth } from "../Firebase/Firebase.config";
 const SignUp = () => {
+  /* for sign up */
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  /*  form ref */
+  const formRef = useRef(null);
+  /* handle sign up  */
+  const handleSignUp = (event) => {
+    event.preventDefault();
+    if (!name) return toast.error("Name field is required.");
+    if (!email) return toast.error("Email field is required.");
+    if (!password) return toast.error("Password field is required.");
+    if (!confirmPassword)
+      return toast.error("Confirm Password field is required.");
+    if (password !== confirmPassword)
+      return toast("Password not matched.", { type: "error" });
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        /*update user profile*/
+        updateProfile(auth.currentUser, {
+          displayName: name,
+          photoURL:
+            "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
+        }).then(() => {
+          toast.success("User profile updated");
+        });
+        toast.success("User created successfully.");
+        /*sent verification email */
+        sendEmailVerification(auth.currentUser).then(() => {
+          toast.success(`Send email for verification to ${email}`);
+        });
+
+        /* reset form  */
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        formRef.reset();
+        console.log(userCredential.user);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error(err.message.split(":")[1]);
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    thirdPartySignIn(auth, provider);
+  };
+
+  const handleGithubSignIn = () => {
+    const provider = new GithubAuthProvider();
+    thirdPartySignIn(auth, provider);
+  };
+
+  const handleFacebookSignIn = () => {
+    const provider = new FacebookAuthProvider();
+    thirdPartySignIn(auth, provider);
+  };
+
   return (
     <SignUpContainer>
       <div className="login-container">
@@ -14,23 +89,39 @@ const SignUp = () => {
           <h1>
             Sign Up into<span className="colorize"> Account</span>
           </h1>
-          <form action="#">
+          <form action="#" onSubmit={handleSignUp} ref={formRef}>
             <div className="input-group">
               <label htmlFor="name">Name</label>
-              <input type="text" placeholder="Name" />
+              <input
+                type="text"
+                onBlur={(event) => setName(event.target.value)}
+                placeholder="Name"
+              />
             </div>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <input type="email" placeholder="Email" />
+              <input
+                type="email"
+                onBlur={(event) => setEmail(event.target.value)}
+                placeholder="Email"
+              />
             </div>
 
             <div className="input-group">
               <label htmlFor="password">Password</label>
-              <input type="password" placeholder="Password" />
+              <input
+                onBlur={(event) => setPassword(event.target.value)}
+                type="password"
+                placeholder="Password"
+              />
             </div>
             <div className="input-group">
               <label htmlFor="password">Confirm Password</label>
-              <input type="password" placeholder="Confirm Password" />
+              <input
+                onBlur={(event) => setConfirmPassword(event.target.value)}
+                type="password"
+                placeholder="Confirm Password"
+              />
             </div>
 
             <div className="input-group">
@@ -40,13 +131,25 @@ const SignUp = () => {
             <div className="others-login">
               <div className="or">or</div>
               <div className="btn-groups">
-                <button title="Google Sign In">
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  title="Google Sign In"
+                >
                   <AiFillGoogleCircle />
                 </button>
-                <button title="Github Sign In">
+                <button
+                  onClick={handleGithubSignIn}
+                  type="button"
+                  title="Github Sign In"
+                >
                   <AiFillGithub />
                 </button>
-                <button title="Facebook Sign In">
+                <button
+                  onClick={handleFacebookSignIn}
+                  type="button"
+                  title="Facebook Sign In"
+                >
                   <AiFillFacebook />
                 </button>
               </div>

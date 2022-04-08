@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import Articles from './components/Articles/Articles';
@@ -15,7 +16,7 @@ function App() {
   return (
     <>
     {!location.pathname.includes('dashboard') && <Header /> }
-     
+     <Toaster position="top-center" reverseOrder={false} />
      <Routes>
          <Route path='/' element={<Home />} />
          <Route path='/home' element={<Home />} />
