@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { auth } from "../Firebase/Firebase.config";
 
 const Article = () => {
+  const loggedInUser = auth.currentUser;
+
   return (
     <ArticleContainer>
       <div className="image">
@@ -17,7 +20,8 @@ const Article = () => {
             Date - <span className="colorize">23 jan, 2022</span>
           </li>
           <li>
-            Author - <span className="colorize">Ashik Mahmud</span>
+            Author -{" "}
+            <span className="colorize">{loggedInUser?.displayName}</span>
           </li>
         </ul>
         <div className="text">

@@ -24,8 +24,7 @@ const useFirebase = () =>{
     useEffect(()=>{
         onAuthStateChanged(auth, user =>{
             setUser(user)
-            user?.uid ? setIsAuth(true) : setIsAuth(false)
-            
+            user?.uid ? setIsAuth(true) : setIsAuth(false)          
         } )
     }, [])
 
