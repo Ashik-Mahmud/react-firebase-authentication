@@ -1,7 +1,90 @@
-import React from "react";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import styled from "styled-components";
+import { v4 } from "uuid";
+import { auth, db, storage } from "../../Firebase/Firebase.config";
 
 export const CreatePost = () => {
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState({});
+  const [imageUrl, setImageUrl] = useState("");
+  const [progress, setProgress] = useState(null);
+  const [imageField, setImageField] = useState(false);
+
+  const formRef = useRef(null);
+
+  const handleAddArticleOnDatabase = (event) => {
+    event.preventDefault();
+    if (!title) return toast.error("Title Field is required.");
+    if (!category) return toast.error("Category field is required.");
+    if (!description) return toast.error("Descriptions field is required.");
+
+    if (image.name) {
+      if (!image.name) return toast.error("Featured Image is required.");
+      const imageRef = ref(
+        storage,
+        `/articles/images/${new Date() + image.name}`
+      );
+      const uploadImage = uploadBytesResumable(imageRef, image);
+      uploadImage.on(
+        "state_changed",
+        (snapShot) => {
+          const progressPercent = Math.round(
+            (snapShot.bytesTransferred / snapShot.totalBytes) * 100
+          );
+          setProgress(progressPercent);
+        },
+        (err) => {
+          toast.error(err.message);
+        },
+        () => {
+          formRef.current.reset();
+          setProgress(null);
+          getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+            const articleRef = collection(db, "/articles");
+            addDoc(articleRef, {
+              id: v4(),
+              title,
+              category,
+              description,
+              image: url,
+              author: {
+                name: auth.currentUser.displayName,
+                uid: auth.currentUser.uid,
+              },
+              createdAt: Timestamp.now().toDate(),
+            }).then(() => {
+              toast.success("Articles submit successfully.");
+            });
+          });
+        }
+      );
+    } else if (imageUrl) {
+      if (!imageUrl) return toast.error("Featured Image is required.");
+      const articleRef = collection(db, "/articles");
+      addDoc(articleRef, {
+        id: v4(),
+        title,
+        category,
+        description,
+        image: imageUrl,
+        author: {
+          name: auth.currentUser.displayName,
+          uid: auth.currentUser.uid,
+        },
+        createdAt: Timestamp.now().toDate(),
+      }).then((res) => {
+        console.log(res);
+        formRef.current.reset();
+        toast.success("Articles submit successfully.");
+      });
+    }
+  };
+
   return (
     <section>
       <div className="title">
@@ -14,7 +97,11 @@ export const CreatePost = () => {
             <h2>Create a Brand new post</h2>
           </div>
           <div className="card-body">
-            <form action="#">
+            <form
+              action="#"
+              ref={formRef}
+              onSubmit={handleAddArticleOnDatabase}
+            >
               <div className="input-group">
                 <label htmlFor="title">Post Title</label>
                 <input
@@ -22,6 +109,7 @@ export const CreatePost = () => {
                   name="title"
                   id="title"
                   placeholder="Title"
+                  onBlur={(e) => setTitle(e.target.value)}
                 />
               </div>
               <div className="input-group">
@@ -31,6 +119,7 @@ export const CreatePost = () => {
                   name="category"
                   id="category"
                   placeholder="Category"
+                  onBlur={(e) => setCategory(e.target.value)}
                 />
               </div>
               <div className="input-group">
@@ -41,12 +130,49 @@ export const CreatePost = () => {
                   cols="30"
                   rows="10"
                   placeholder="Post Description"
+                  onBlur={(e) => setDescription(e.target.value)}
                 ></textarea>
               </div>
               <div className="input-group">
-                <label htmlFor="file">Upload Post Image</label>
-                <input type="file" name="file" id="file" />
+                <label>
+                  Upload Post Image
+                  <small
+                    className="url-btn cursor-pointer"
+                    onClick={() => setImageField((prev) => !prev)}
+                  >
+                    {imageField ? "Upload" : "URL"}
+                  </small>
+                </label>
+                {imageField ? (
+                  <input
+                    type="url"
+                    name="url"
+                    id="url"
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="Put your image URL"
+                  />
+                ) : (
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    onChange={(e) => setImage(e.target.files[0])}
+                  />
+                )}
               </div>
+              {progress && (
+                <div className="input-group">
+                  <div className="progress">
+                    <div
+                      className="progressbar"
+                      style={{ width: `${progress}%` }}
+                    >
+                      <small>{progress}%</small>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="input-group">
                 <label htmlFor="button">Action</label>
                 <button type="submit" className="btn">
@@ -87,6 +213,26 @@ const CreatePostContainer = styled.div`
         align-items: flex-start;
         justify-content: space-between;
         position: relative;
+        .url-btn {
+          background: var(--main-color);
+          color: var(--accent-color);
+          margin: 0rem 0.3rem;
+          padding: 0.2rem;
+          border-radius: 4px;
+        }
+        .progress {
+          position: relative;
+          width: 80%;
+          height: 4px;
+          background: #f8f8f8;
+          margin-left: auto;
+          .progressbar {
+            position: absolute;
+            height: 100%;
+            inset: 0;
+            background-color: var(--main-color);
+          }
+        }
         input,
         textarea {
           width: 80%;

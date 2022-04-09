@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../Firebase/Firebase.config";
 
-const Article = ({ title, description, image, Date }) => {
+const Article = ({ title, description, image, createdAt, id }) => {
   const loggedInUser = auth.currentUser;
   const navigate = useNavigate();
 
@@ -17,7 +17,9 @@ const Article = ({ title, description, image, Date }) => {
         <ul className="meta">
           <li>
             Date -
-            <span className="colorize">{Date.toDate().toDateString()}</span>
+            <span className="colorize">
+              {createdAt?.toDate()?.toDateString()}
+            </span>
           </li>
           <li>
             Author -
@@ -30,7 +32,7 @@ const Article = ({ title, description, image, Date }) => {
               ? description?.slice(0, 200)
               : description}
             <span
-              onClick={() => navigate(`/ArticleDetails/1`)}
+              onClick={() => navigate(`/ArticleDetails/${id}`)}
               className="cursor-pointer colorize"
             >
               ...Read more

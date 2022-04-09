@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../components/Firebase/Firebase.config";
 
@@ -7,7 +7,7 @@ const useArticles = () =>{
     const [loading, setLoading] = useState(false)
     useEffect(()=>{  
         const getArticles = async() =>{
-            const articlesDocs = await getDocs(query(collection(db, "articles"), orderBy('Date', "desc")))
+            const articlesDocs = await getDocs(collection(db, "articles"))
             const articlesData = articlesDocs.docs.map(doc => ({...doc.data(), id: doc.id}));
             setArticles(articlesData)
             setLoading(true)

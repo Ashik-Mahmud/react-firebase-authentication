@@ -1,12 +1,14 @@
 import React from "react";
 import { BsSearch } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useArticles from "../../hooks/useArticles";
 import Article from "../Article/Article";
+import { auth } from "../Firebase/Firebase.config";
 import Loader from "../Loader/Loader";
 const Articles = () => {
   const { articles, loading } = useArticles();
-
+  const navigate = useNavigate();
   return (
     <section id="articles">
       <div className="container">
@@ -22,12 +24,37 @@ const Articles = () => {
             </button>
           </div>
         </SectionTitle>
+
         {loading ? (
-          <ArticleContainer>
-            {articles.map((article) => (
-              <Article key={article.id} {...article} />
-            ))}
-          </ArticleContainer>
+          articles.length > 0 ? (
+            <ArticleContainer>
+              {articles.map((article) => (
+                <Article key={article.id} {...article} />
+              ))}
+            </ArticleContainer>
+          ) : (
+            <>
+              <NotFoundArticles>
+                <img
+                  src="https://cdn.dribbble.com/users/2939235/screenshots/7895570/media/a514579499752bed80ba8280eee7cd48.jpg?compress=1&resize=400x300"
+                  alt=""
+                />
+                <h2>There is no Articles Yet</h2>
+                {auth?.currentUser?.uid ? (
+                  <button
+                    className="btn"
+                    onClick={() => navigate("/dashboard/create-post")}
+                  >
+                    Create Your First
+                  </button>
+                ) : (
+                  <button className="btn" onClick={() => navigate("/login")}>
+                    Login & Publish Articles
+                  </button>
+                )}
+              </NotFoundArticles>
+            </>
+          )
         ) : (
           <Loader />
         )}
@@ -44,6 +71,7 @@ const SectionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   .search {
     display: flex;
     align-items: stretch;
@@ -74,5 +102,13 @@ const ArticleContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   position: relative;
   grid-gap: 1rem;
+`;
+const NotFoundArticles = styled.div`
+  text-align: center;
+  padding: 3rem 0rem;
+  position: relative;
+  button {
+    margin: 1rem 0rem;
+  }
 `;
 export default Articles;
