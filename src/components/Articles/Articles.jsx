@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -7,8 +7,21 @@ import Article from "../Article/Article";
 import { auth } from "../Firebase/Firebase.config";
 import Loader from "../Loader/Loader";
 const Articles = () => {
+  const [searchedArticles, setSearchedArticles] = useState([]);
+  const [search, setSearch] = useState("");
   const { articles, loading } = useArticles();
   const navigate = useNavigate();
+  useEffect(() => {
+    setSearchedArticles(articles);
+  }, [articles]);
+
+  const handleSearch = () => {
+    const filterArticles = articles.filter((article) =>
+      article?.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setSearchedArticles(filterArticles);
+  };
+
   return (
     <section id="articles">
       <div className="container">
@@ -18,17 +31,22 @@ const Articles = () => {
             <p>read & create articles create greatest artist only.</p>
           </div>
           <div className="search">
-            <input type="search" placeholder="Search Articles" />
-            <button>
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              type="search"
+              value={search}
+              placeholder="Search Articles"
+            />
+            <button onClick={handleSearch}>
               <BsSearch />
             </button>
           </div>
         </SectionTitle>
 
         {loading ? (
-          articles.length > 0 ? (
+          searchedArticles.length > 0 ? (
             <ArticleContainer>
-              {articles.map((article) => (
+              {searchedArticles.map((article) => (
                 <Article key={article.id} {...article} />
               ))}
             </ArticleContainer>
