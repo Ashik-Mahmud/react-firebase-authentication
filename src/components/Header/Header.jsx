@@ -99,9 +99,12 @@ const NavBar = styled.nav`
       color: var(--secondary-color);
       font-size: 1rem;
       font-weight: bold;
+      padding: 0.3rem 0.6rem;
     }
     a.active {
       color: var(--main-color);
+      background-color: #e7e7e7;
+      border-radius: 5px;
     }
   }
 `;

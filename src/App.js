@@ -14,6 +14,7 @@ import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
 import SignUp from './components/SignUp/SignUp';
 import useFirebase from './hooks/useFirebase';
+import RequiredAuth from './utilities/RequiredAuth';
 export const AuthContext = createContext(null)
 function App() {
   const location = useLocation();
@@ -31,7 +32,7 @@ function App() {
          <Route path='/home' element={<Home />} />
          <Route path='/articles' element={<Articles />} />
          <Route path='/articleDetails/:ArticleId' element={<ArticleDetails />} />
-         {isAuth &&  <Route path='/dashboard' element={<Dashboard />} >
+         {isAuth &&  <Route path='/dashboard' element={<RequiredAuth><Dashboard /></RequiredAuth>} >
              <Route index="1" path='overview' element={<Overview />} />
              <Route path='create-post' element={<CreatePost />} />
              <Route path='post-lists' element={<PostList />} />

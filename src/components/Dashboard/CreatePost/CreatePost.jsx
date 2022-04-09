@@ -77,8 +77,7 @@ export const CreatePost = () => {
           uid: auth.currentUser.uid,
         },
         createdAt: Timestamp.now().toDate(),
-      }).then((res) => {
-        console.log(res);
+      }).then(() => {
         formRef.current.reset();
         toast.success("Articles submit successfully.");
       });

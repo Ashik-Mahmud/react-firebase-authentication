@@ -1,8 +1,42 @@
-import React from "react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
 import { GoTrashcan } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useArticles from "../../../hooks/useArticles";
+import { auth, db, storage } from "../../Firebase/Firebase.config";
 const PostList = () => {
+  const [postedArticles, setPostedArticles] = useState([]);
+  const { articles } = useArticles();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const currentUserArticles = articles.filter(
+      (article) => article.author.uid === auth.currentUser.uid
+    );
+    setPostedArticles(currentUserArticles);
+  }, [articles]);
+
+  /* handle delete doc  */
+  const handlePostDelete = async (id, image) => {
+    if (window.confirm("Do you want to delete it?")) {
+      const deleteDocRef = doc(db, "articles", id);
+      await deleteDoc(deleteDocRef);
+      const filteredOut = articles.filter((article) => article?.id !== id);
+      setPostedArticles(filteredOut);
+      const deleteImageRef = ref(storage, image);
+      await deleteObject(deleteImageRef)
+        .then(() => {
+          toast.success("User Delete Successfully.");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <section>
       <div className="title">
@@ -15,45 +49,72 @@ const PostList = () => {
             <h2>All Post List</h2>
           </div>
           <div className="card-body">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Short Description</th>
-                  <th>Image</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Why people are ready always?</td>
-                  <td>Tech</td>
-                  <td>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  </td>
-                  <td>
-                    <img
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxbaBAYz6XaWcBOMw8MpTkIZNSHsKSmUBDW6UhWatEsAxCSZWyjXYFiXuZr7pTvfrifFU&usqp=CAU"
-                      alt=""
-                    />
-                  </td>
-                  <td>
-                    <span>
-                      <FiEdit />
-                    </span>
-                  </td>
-                  <td>
-                    <span>
-                      <GoTrashcan />
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {postedArticles.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Short Description</th>
+                    <th>Image</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {postedArticles.map((article) => (
+                    <tr key={article.id}>
+                      <td title={article?.id}>
+                        {article?.id.length > 6
+                          ? article?.id?.slice(0, 6) + "..."
+                          : article.id}
+                      </td>
+                      <td title={article?.title}>
+                        {article?.title.length > 30
+                          ? article?.title.slice(0, 30) + "..."
+                          : article?.title}
+                      </td>
+                      <td>
+                        {article?.category ? article.category : "Not Available"}
+                      </td>
+                      <td title={article?.description}>
+                        {article?.description.length > 50
+                          ? article?.description.slice(0, 50) + "...."
+                          : article?.description}
+                      </td>
+                      <td>
+                        <img src={article?.image} alt="" />
+                      </td>
+                      <td title="Not Available">
+                        <span className="disabled">
+                          <FiEdit />
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          onClick={() =>
+                            handlePostDelete(article?.id, article?.image)
+                          }
+                        >
+                          <GoTrashcan />
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>
+                No Post published yet.{" "}
+                <span
+                  onClick={() => navigate("/dashboard/create-post")}
+                  className="colorize cursor-pointer bold"
+                >
+                  Create
+                </span>
+              </p>
+            )}
           </div>
         </div>
       </PostListContainer>
@@ -88,6 +149,7 @@ const PostListContainer = styled.div`
             width: 70px;
             height: 70px;
             border-radius: 5px;
+            object-fit: cover;
           }
           span {
             cursor: pointer;

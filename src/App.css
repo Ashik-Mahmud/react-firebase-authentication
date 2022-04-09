@@ -73,3 +73,10 @@ section {
 .color-danger {
   color: salmon;
 }
+.bold {
+  font-weight: bold;
+}
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

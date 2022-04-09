@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../Firebase/Firebase.config";
 
-const Article = ({ title, description, image, createdAt, id }) => {
+const Article = ({ title, description, author, image, createdAt, id }) => {
   const loggedInUser = auth.currentUser;
   const navigate = useNavigate();
 
@@ -22,8 +22,7 @@ const Article = ({ title, description, image, createdAt, id }) => {
             </span>
           </li>
           <li>
-            Author -
-            <span className="colorize">{loggedInUser?.displayName}</span>
+            Author -<span className="colorize">{author?.name}</span>
           </li>
         </ul>
         <div className="text">
