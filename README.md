@@ -28,6 +28,6 @@ This is firebase articles app where you can create a account using your google a
 
 ## Review screenshot
 
-![imageScreenshot](./review.png)
+![imageScreenshot](./preview.png)
 
 > Thanks for reach out me on github.
