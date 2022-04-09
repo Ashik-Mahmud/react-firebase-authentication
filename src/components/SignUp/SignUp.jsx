@@ -147,6 +147,10 @@ const SignUpContainer = styled.section`
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.08);
     position: relative;
     border-radius: 5px;
+    @media (max-width: 600px) {
+      width: 100%;
+      padding-bottom: 12rem;
+    }
     h1 {
       margin-bottom: 1rem;
     }

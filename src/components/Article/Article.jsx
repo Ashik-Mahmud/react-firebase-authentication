@@ -1,10 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { auth } from "../Firebase/Firebase.config";
 
 const Article = ({ title, description, author, image, createdAt, id }) => {
-  const loggedInUser = auth.currentUser;
   const navigate = useNavigate();
 
   return (
@@ -49,10 +47,16 @@ const ArticleContainer = styled.div`
   padding: 0.6rem;
   border-radius: 4px;
   gap: 1.5rem;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
   .image {
     height: 100%;
     border-radius: 4px;
     width: 500px;
+    @media (max-width: 600px) {
+      width: 100%;
+    }
     img {
       border-radius: 4px;
       height: 100%;

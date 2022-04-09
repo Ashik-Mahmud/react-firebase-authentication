@@ -90,6 +90,21 @@ const NavBar = styled.nav`
     align-items: center;
     position: relative;
     gap: 2rem;
+    flex-wrap: wrap;
+    @media (max-width: 600px) {
+      position: fixed;
+      width: 80%;
+      justify-content: center;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 4%;
+      z-index: 1;
+      background-color: #ffffffd2;
+      padding: 1rem;
+      box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      backdrop-filter: blur(4px);
+    }
     .display-name {
       display: flex;
       align-items: center;

@@ -38,11 +38,24 @@ const HomeContainer = styled.section`
     position: relative;
     min-height: 90vh;
     gap: 2rem;
+    @media (max-width: 600px) {
+      flex-direction: column;
+      text-align: center;
+    }
     .blog-text {
       flex: 1;
+      @media (max-width: 600px) {
+        order: 2;
+        h3 {
+          font-size: 1rem;
+        }
+      }
       h1 {
         font-size: 4rem;
         font-weight: 800;
+        @media (max-width: 1100px) {
+          font-size: 2rem;
+        }
       }
       p {
         line-height: 1.7;
@@ -52,8 +65,14 @@ const HomeContainer = styled.section`
     }
     .blog-image {
       flex: 1;
+      @media (max-width: 600px) {
+        order: 1;
+      }
       img {
         width: 80%;
+        @media (max-width: 600px) {
+          width: 100%;
+        }
       }
     }
   }

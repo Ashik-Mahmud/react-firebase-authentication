@@ -189,10 +189,16 @@ export const CreatePost = () => {
 const CreatePostContainer = styled.div`
   position: relative;
   padding: 4rem;
+  @media (max-width: 1000px) {
+    padding: 1rem;
+  }
   .card {
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.08);
     padding: 2rem;
     border-radius: 5px;
+    @media (max-width: 1000px) {
+      padding: 1rem;
+    }
     .card-header {
       padding: 1rem;
       background: #f8f8f8;
@@ -212,6 +218,8 @@ const CreatePostContainer = styled.div`
         align-items: flex-start;
         justify-content: space-between;
         position: relative;
+        flex-wrap: wrap;
+        gap: 0.5rem;
         .url-btn {
           background: var(--main-color);
           color: var(--accent-color);
@@ -241,6 +249,9 @@ const CreatePostContainer = styled.div`
           border: 2px solid #ccc;
           outline: none;
           border-radius: 5px;
+          @media (max-width: 1000px) {
+            width: 100%;
+          }
           &:focus {
             border: 2px solid var(--main-color);
           }

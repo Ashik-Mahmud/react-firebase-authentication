@@ -89,7 +89,9 @@ const SectionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
   .search {
     display: flex;
     align-items: stretch;
@@ -120,6 +122,9 @@ const ArticleContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   position: relative;
   grid-gap: 1rem;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 const NotFoundArticles = styled.div`
   text-align: center;

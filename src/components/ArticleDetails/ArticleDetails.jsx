@@ -100,6 +100,9 @@ const ArticleDetailsContainer = styled.section`
       border-radius: 5px;
       box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
       background: #fff;
+      @media (max-width: 700px) {
+        width: 100%;
+      }
       img {
         width: 100%;
         height: 100%;
@@ -110,6 +113,7 @@ const ArticleDetailsContainer = styled.section`
       margin-top: 14rem;
       text-align: center;
       position: relative;
+
       .blog-title {
         margin: 1rem 0rem;
         .meta {
@@ -117,6 +121,7 @@ const ArticleDetailsContainer = styled.section`
           align-items: center;
           justify-content: center;
           gap: 1rem;
+          flex-wrap: wrap;
           margin: 1rem 0rem;
           span {
             font-weight: bold;
@@ -129,6 +134,9 @@ const ArticleDetailsContainer = styled.section`
         font-size: 1.1em;
         line-height: 1.7;
         padding: 0rem 8em;
+        @media (max-width: 700px) {
+          padding: 0rem 1em;
+        }
       }
     }
   }
