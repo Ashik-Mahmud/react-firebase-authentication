@@ -1,11 +1,17 @@
 import React from "react";
 import { BsChevronDoubleLeft } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const ArticleDetails = () => {
+  const navigate = useNavigate();
   return (
     <ArticleDetailsContainer>
       <div className="header-overlay">
-        <span title="Go Back Articles" className="back-btn cursor-pointer">
+        <span
+          title="Go Back Articles"
+          onClick={() => navigate(-1)}
+          className="back-btn cursor-pointer"
+        >
           <BsChevronDoubleLeft />
         </span>
       </div>

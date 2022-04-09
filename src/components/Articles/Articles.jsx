@@ -1,8 +1,12 @@
 import React from "react";
 import { BsSearch } from "react-icons/bs";
 import styled from "styled-components";
+import useArticles from "../../hooks/useArticles";
 import Article from "../Article/Article";
+import Loader from "../Loader/Loader";
 const Articles = () => {
+  const { articles, loading } = useArticles();
+
   return (
     <section id="articles">
       <div className="container">
@@ -18,18 +22,15 @@ const Articles = () => {
             </button>
           </div>
         </SectionTitle>
-        <ArticleContainer>
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-          <Article />
-        </ArticleContainer>
+        {loading ? (
+          <ArticleContainer>
+            {articles.map((article) => (
+              <Article key={article.id} {...article} />
+            ))}
+          </ArticleContainer>
+        ) : (
+          <Loader />
+        )}
       </div>
     </section>
   );

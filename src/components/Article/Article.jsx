@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../Firebase/Firebase.config";
 
-const Article = () => {
+const Article = ({ title, description }) => {
   const loggedInUser = auth.currentUser;
   const navigate = useNavigate();
   return (
@@ -15,7 +15,7 @@ const Article = () => {
         />
       </div>
       <div className="details">
-        <h3>Blog Title Goes here</h3>
+        <h3>{title}</h3>
         <ul className="meta">
           <li>
             Date - <span className="colorize">23 jan, 2022</span>
@@ -27,14 +27,14 @@ const Article = () => {
         </ul>
         <div className="text">
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et illum
-            consequuntur deserunt ut iusto voluptates provident excepturi ipsam
-            est at.{" "}
+            {description?.length > 200
+              ? description?.slice(0, 200)
+              : description}
             <span
               onClick={() => navigate(`/ArticleDetails/1`)}
               className="cursor-pointer colorize"
             >
-              read more
+              ...Read more
             </span>
           </p>
         </div>
