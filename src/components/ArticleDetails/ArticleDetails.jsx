@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsChevronDoubleLeft } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import useArticles from "../../hooks/useArticles";
 const ArticleDetails = () => {
+  const [articleDetails, setArticlesDetails] = useState({});
   const navigate = useNavigate();
+  const { ArticleId } = useParams();
+  const { articles } = useArticles();
+  useEffect(() => {
+    const desireArticle = articles.find((article) => article.id === ArticleId);
+    setArticlesDetails(desireArticle);
+  }, [ArticleId, articles]);
+
+  console.log(ArticleId);
   return (
     <ArticleDetailsContainer>
       <div className="header-overlay">
@@ -18,66 +29,40 @@ const ArticleDetails = () => {
       <div className="container">
         <div className="article-container">
           <div className="image">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxbaBAYz6XaWcBOMw8MpTkIZNSHsKSmUBDW6UhWatEsAxCSZWyjXYFiXuZr7pTvfrifFU&usqp=CAU"
-              alt="pho"
-            />
+            {articleDetails?.image ? (
+              <img src={articleDetails?.image} alt="pho" />
+            ) : (
+              <Skeleton height={320} />
+            )}
           </div>
           <div className="details">
             <div className="blog-title">
-              <h1>Why People are walking on morning why not noon</h1>
+              <h1>{articleDetails?.title || <Skeleton count={1} />}</h1>
               <ul className="meta">
-                <li>
-                  Data - <span className="colorize">20 Jan, 2022</span>
-                </li>
-                <li>
-                  Author - <span className="colorize">Ashik Mahmud</span>
-                </li>
+                {articleDetails ? (
+                  <li>
+                    Data -
+                    <span className="colorize">
+                      {articleDetails?.createdAt?.toDate()?.toDateString()}
+                    </span>
+                  </li>
+                ) : (
+                  <Skeleton count={1} />
+                )}
+                {articleDetails ? (
+                  <li>
+                    Author -
+                    <span className="colorize">
+                      {articleDetails?.author?.name}
+                    </span>
+                  </li>
+                ) : (
+                  <Skeleton count={1} />
+                )}
               </ul>
             </div>
             <div className="desc">
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. In
-                asperiores vero omnis, sequi ipsam accusantium. Corporis magni
-                eaque facilis incidunt consequuntur voluptatum quam, eum vitae
-                dolores minima consectetur vel adipisci. Lorem ipsum dolor sit
-                amet consectetur, adipisicing elit. Velit illo impedit ab
-                inventore provident dignissimos laborum tempore nihil explicabo
-                deleniti fugiat, dolorum a obcaecati iusto officiis id est esse
-                dicta! Vero eos tempore nihil minus eligendi, dignissimos
-                aperiam. Aspernatur, cupiditate! Nobis nemo ad, fuga laudantium
-                delectus suscipit totam optio. Dolor ut, labore qui neque illum
-                iste in fugit ad rerum deserunt fugiat dolorum laudantium dolore
-                iure quos magnam asperiores harum officia, excepturi obcaecati.
-                Quaerat esse amet delectus error ipsa placeat maxime dolore
-                debitis aliquam quae earum, quos officiis veritatis voluptates
-                architecto reprehenderit! Assumenda, provident corporis in optio
-                ex porro quos? Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Autem doloribus impedit quas, tenetur est
-                ratione mollitia in, id exercitationem accusamus dicta possimus
-                atque iure nostrum et! Itaque consectetur sed quod neque
-                repellat dolores a minus, quas atque maxime veritatis non omnis,
-                blanditiis distinctio similique fuga quo totam nesciunt ad!
-                Possimus accusamus voluptatem neque eos inventore quisquam
-                doloremque culpa quasi! Totam cumque placeat itaque
-                necessitatibus magnam a, possimus est sint explicabo quia, nobis
-                quam recusandae amet fugit nemo soluta deserunt! Consequatur
-                porro voluptatum mollitia, sapiente suscipit laboriosam
-                asperiores adipisci rem vero! Fugit praesentium corporis ipsam
-                est libero facilis! Tempore cum dignissimos adipisci sit eos
-                iusto, praesentium in autem! Praesentium, rem doloremque
-                quibusdam aspernatur autem earum ex vel quos. Perferendis autem
-                soluta quae sunt repudiandae voluptatem excepturi exercitationem
-                rerum omnis error. In distinctio quasi atque. Beatae maxime
-                delectus architecto minima ipsa nisi iure, nobis ab illum
-                recusandae ratione? Dolores iusto vitae beatae velit quos.
-                Voluptatum eos optio vero sit explicabo porro autem accusantium
-                nihil expedita ut quam fugit, hic eligendi repudiandae non
-                voluptates, velit magnam minima quo officiis, id maxime quas
-                nulla culpa. Vero nihil facilis accusantium minus? Iste itaque
-                optio corporis velit illum voluptates quis quam nisi amet.
-                Mollitia, vitae pariatur!
-              </p>
+              <p>{articleDetails?.description || <Skeleton count={30} />}</p>
             </div>
           </div>
         </div>
