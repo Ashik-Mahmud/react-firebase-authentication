@@ -3,25 +3,24 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../Firebase/Firebase.config";
 
-const Article = ({ title, description }) => {
+const Article = ({ title, description, image, Date }) => {
   const loggedInUser = auth.currentUser;
   const navigate = useNavigate();
+
   return (
     <ArticleContainer>
       <div className="image">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxbaBAYz6XaWcBOMw8MpTkIZNSHsKSmUBDW6UhWatEsAxCSZWyjXYFiXuZr7pTvfrifFU&usqp=CAU"
-          alt=""
-        />
+        <img src={image} alt={title} />
       </div>
       <div className="details">
         <h3>{title}</h3>
         <ul className="meta">
           <li>
-            Date - <span className="colorize">23 jan, 2022</span>
+            Date -
+            <span className="colorize">{Date.toDate().toDateString()}</span>
           </li>
           <li>
-            Author -{" "}
+            Author -
             <span className="colorize">{loggedInUser?.displayName}</span>
           </li>
         </ul>
@@ -57,6 +56,7 @@ const ArticleContainer = styled.div`
       border-radius: 4px;
       height: 100%;
       width: 100%;
+      object-fit: cover;
     }
   }
   .meta {
