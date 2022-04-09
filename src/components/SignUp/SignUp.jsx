@@ -39,7 +39,7 @@ const SignUp = () => {
       return toast.error("Confirm Password field is required.");
     if (password !== confirmPassword)
       return toast("Password not matched.", { type: "error" });
-
+    if (!avatar.name) return toast.error("Put your avatar");
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const imageRef = ref(storage, `/images/${avatar.name + v4()}`);
